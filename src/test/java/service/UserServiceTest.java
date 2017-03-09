@@ -30,7 +30,7 @@ public class UserServiceTest {
 		Assert.assertEquals(1, users.size());
 	}
 	
-	@Test
+//	@Test
 	public void getUserTest() {
 		long id = 1;
 		User user = userService.getUser(id);
