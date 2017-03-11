@@ -1,18 +1,22 @@
 package com.demo.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.demo.model.User;
 import com.demo.service.UserService;
 
-public class UserCreateServlet extends HttpServlet {
+@WebServlet("/user")
+public class UserServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 2038915183723235695L;
-
+	
 	private UserService userService;
 
 	@Override
@@ -22,6 +26,9 @@ public class UserCreateServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<User> users = userService.getUserList();
+		req.setAttribute("userList", users);
+		req.getRequestDispatcher("/WEB-INF/view/user.jsp").forward(req, resp);
 	}
 
 	@Override

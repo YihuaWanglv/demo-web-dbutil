@@ -1,5 +1,8 @@
 package com.demo.util;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -219,9 +222,9 @@ public class DatabaseHelper {
 			values.append("?, ");
 		}
 		columns.replace(columns.lastIndexOf(", "), columns.length(), ")");
-		columns.replace(values.lastIndexOf(", "), values.length(), ")");
+		values.replace(values.lastIndexOf(", "), values.length(), ")");
 		sql += columns + " values " + values;
-
+		System.err.println(sql);
 		Object[] params = fieldMap.values().toArray();
 		return executeUpdate(sql, params) == 1;
 	}
@@ -267,5 +270,25 @@ public class DatabaseHelper {
 
 	private static String getTableName(Class<?> enrityClass) {
 		return enrityClass.getSimpleName();
+	}
+
+	/**
+	 * 执行sql文件
+	 * 
+	 * @param filePath
+	 */
+	public static void executeSqlFile(String filePath) {
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		try {
+			String sql;
+			while ((sql = reader.readLine()) != null) {
+				executeUpdate(sql);
+			}
+		} catch (Exception e) {
+			LOGGER.error("execute sql file failure", e);
+			throw new RuntimeException(e);
+		}
+
 	}
 }
